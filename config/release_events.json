@@ -1,0 +1,14 @@
+[
+  {
+    "version": "RC01",
+    "delivery": "2025-01-12",
+    "preparation_start": "2025-01-14",
+    "preparation_end": "2025-01-15"
+  },
+  {
+    "version": "RC02",
+    "delivery": "2025-01-20",
+    "preparation_start": "2025-01-21",
+    "preparation_end": "2025-01-23"
+  }
+]
