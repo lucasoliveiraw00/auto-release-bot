@@ -122,3 +122,9 @@ Para automatizar a execução diária, adicione uma entrada no cron:
 ```
 
 _(Esse exemplo executa o bot todos os dias às **09:00 AM**)._
+
+### 📋 Exemplo de Notificação no Google Chat
+
+Abaixo está um exemplo de como o **Auto-Release-Bot** envia notificações automáticas para o **Google Chat**:
+
+![Exemplo de Notificação no Google Chat](https://raw.githubusercontent.com/lucasoliveiraw00/auto-release-bot/main/assets/google-chat-notification.png)
