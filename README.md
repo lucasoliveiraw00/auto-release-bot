@@ -127,4 +127,4 @@ _(Esse exemplo executa o bot todos os dias às **09:00 AM**)._
 
 Abaixo está um exemplo de como o **Auto-Release-Bot** envia notificações automáticas para o **Google Chat**:
 
-![Exemplo de Notificação no Google Chat](https://raw.githubusercontent.com/lucasoliveiraw00/auto-release-bot/main/assets/google-chat-notification.png)
+![Exemplo de Notificação no Google Chat](https://raw.githubusercontent.com/lucasoliveiraw00/auto-release-bot/7e4bf03036258e3e69143ef19b9fe12557f10cdb/assets/google-chat-notification.png)
