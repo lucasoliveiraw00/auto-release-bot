@@ -5,9 +5,19 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
+
+// SonarThresholds armazena os critérios do Sonar
+type SonarThresholds struct {
+	NewSecurityHotspots       float64
+	NewViolations             float64
+	NewAcceptedIssues         float64
+	NewCoverage               float64
+	NewDuplicatedLinesDensity float64
+}
 
 // Config estrutura todas as variáveis de ambiente da aplicação
 type Config struct {
@@ -21,9 +31,10 @@ type Config struct {
 	VersionCalendarURL string
 	QualityCriteriaURL string
 	ReleaseEventsPath  string
+	SonarThresholds    SonarThresholds
 }
 
-// LoadConfig carrega as variáveis de ambiente
+// LoadConfig carrega todas as variáveis do .env e do sistema
 func LoadConfig() (*Config, error) {
 	envPath := flag.String("env", "./.env", "Caminho para o arquivo .env (padrão: ./.env)")
 	releaseEventsPath := flag.String("release-events", "./config/release_events.json", "Caminho para o arquivo release_events.json (padrão: ./config/release_events.json)")
@@ -34,6 +45,16 @@ func LoadConfig() (*Config, error) {
 		log.Println("⚠️ Nenhum arquivo .env foi encontrado, usando variáveis de ambiente padrão")
 	}
 
+	// Lendo e convertendo os thresholds do Sonar
+	sonarThresholds := SonarThresholds{
+		NewSecurityHotspots:       getEnvAsFloat("SONAR_NEW_SECURITY_HOTSPOTS", 0),
+		NewViolations:             getEnvAsFloat("SONAR_NEW_VIOLATIONS", 0),
+		NewAcceptedIssues:         getEnvAsFloat("SONAR_NEW_ACCEPTED_ISSUES", 0),
+		NewCoverage:               getEnvAsFloat("SONAR_NEW_COVERAGE", 75),
+		NewDuplicatedLinesDensity: getEnvAsFloat("SONAR_NEW_DUPLICATED_LINES_DENSITY", 0),
+	}
+
+	// Monta a struct Config
 	config := &Config{
 		GoogleChatWebhook:  getEnv("GOOGLE_CHAT_WEBHOOK", ""),
 		MockDate:           getEnv("MOCK_DATE", ""),
@@ -45,6 +66,7 @@ func LoadConfig() (*Config, error) {
 		VersionCalendarURL: getEnv("VERSION_CALENDAR_URL", ""),
 		QualityCriteriaURL: getEnv("QUALITY_CRITERIA_URL", ""),
 		ReleaseEventsPath:  *releaseEventsPath,
+		SonarThresholds:    sonarThresholds,
 	}
 
 	// Lista de variáveis obrigatórias
@@ -62,7 +84,7 @@ func LoadConfig() (*Config, error) {
 		{"QUALITY_CRITERIA_URL", config.QualityCriteriaURL},
 	}
 
-	// Verifica se todas as variáveis obrigatórias estão preenchidas
+	// Valida as variáveis obrigatórias
 	for _, envVar := range requiredEnvVars {
 		if envVar.value == "" {
 			return nil, fmt.Errorf("❌ ERRO: Variável obrigatória ausente no ambiente: %s", envVar.name)
@@ -72,10 +94,25 @@ func LoadConfig() (*Config, error) {
 	return config, nil
 }
 
-// getEnv pega variável de ambiente com fallback para valor padrão
+// getEnv lê uma variável de ambiente com fallback para um valor padrão
 func getEnv(key string, defaultValue string) string {
 	if value, exists := os.LookupEnv(key); exists {
 		return value
 	}
 	return defaultValue
+}
+
+// getEnvAsFloat lê uma variável de ambiente e a converte para float64
+func getEnvAsFloat(key string, defaultValue float64) float64 {
+	valStr := getEnv(key, "")
+	if valStr == "" {
+		return defaultValue
+	}
+
+	valFloat, err := strconv.ParseFloat(valStr, 64)
+	if err != nil {
+		log.Printf("⚠️ Erro ao converter %s='%s' para float64. Usando valor padrão %.2f", key, valStr, defaultValue)
+		return defaultValue
+	}
+	return valFloat
 }

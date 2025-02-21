@@ -52,11 +52,11 @@ func FetchSonarData(cfg config.Config, prNumber int) bool {
 	}
 
 	thresholds := map[string]float64{
-		"new_security_hotspots":        0,
-		"new_violations":               0,
-		"new_accepted_issues":          0,
-		"new_coverage":                 75,
-		"new_duplicated_lines_density": 0,
+		"new_security_hotspots":        cfg.SonarThresholds.NewSecurityHotspots,
+		"new_violations":               cfg.SonarThresholds.NewViolations,
+		"new_accepted_issues":          cfg.SonarThresholds.NewAcceptedIssues,
+		"new_coverage":                 cfg.SonarThresholds.NewCoverage,
+		"new_duplicated_lines_density": cfg.SonarThresholds.NewDuplicatedLinesDensity,
 	}
 
 	issues := make(map[string]float64)
