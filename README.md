@@ -1,6 +1,6 @@
-# 🚀 Auto-Release-Bot
+## 🤖 Auto-Release-Bot
 
-## 📌 Sobre o Projeto
+### 📌 Sobre o Projeto
 
 O **Auto-Release-Bot** é um **bot em Golang** projetado para enviar **notificações automáticas** para uma **sala no Google Chat**, mantendo a equipe informada sobre eventos críticos do **ciclo de releases**.
 
